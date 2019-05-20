@@ -127,7 +127,6 @@ Widget getPostDetails(Post post) {
       subtitle: FadeInImage.memoryNetwork(
           placeholder: kTransparentImage, image: post.url),
     );
-
   }
 }
 
