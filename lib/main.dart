@@ -6,6 +6,7 @@ import 'package:looper_tv/post_bloc.dart';
 import 'bloc/post.dart';
 import 'bloc/post_event.dart';
 import 'bloc/post_state.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 void main() {
   runApp(new MyApp());
@@ -102,22 +103,31 @@ class PostWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Flex(
       children: <Widget>[
-        Expanded(
-          child: Card(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                ListTile(
-                  title: Text(post.title),
-                  subtitle: Text(post.url),
-                )
-              ],
-            ),
+        Card(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[getPostDetails(post)],
           ),
-        )
+        ),
       ],
       direction: Axis.vertical,
     );
+  }
+}
+
+Widget getPostDetails(Post post) {
+  if (post.isVideo) {
+    return ListTile(
+      title: Text(post.title),
+      subtitle: Text(post.isVideo.toString() + "-" + post.url),
+    );
+  } else {
+    return ListTile(
+      title: Text(post.title),
+      subtitle: FadeInImage.memoryNetwork(
+          placeholder: kTransparentImage, image: post.url),
+    );
+
   }
 }
 
