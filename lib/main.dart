@@ -39,7 +39,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _scrollController =
-      new PageController(keepPage: false, viewportFraction: 0.8);
+      new PageController(keepPage: false, viewportFraction: 0.85);
   final PostBloc _postBloc = PostBloc(httpClient: http.Client());
   final _scrollThreshold = 200.0;
 
@@ -64,15 +64,18 @@ class _HomePageState extends State<HomePage> {
           );
         }
         if (state is PostLoaded) {
-          return PageView.builder(
-            itemBuilder: (BuildContext context, int index) {
-              return index >= state.posts.length
-                  ? BottomLoader()
-                  : PostWidget(post: state.posts[index]);
-            },
-            scrollDirection: Axis.vertical,
-            itemCount: state.posts.length + 1,
-            controller: _scrollController,
+          return Padding(
+            padding: const EdgeInsets.fromLTRB(8.0, 2.0, 8.0, 2.0),
+            child: PageView.builder(
+              itemBuilder: (BuildContext context, int index) {
+                return index >= state.posts.length
+                    ? BottomLoader()
+                    : PostWidget(post: state.posts[index]);
+              },
+              scrollDirection: Axis.vertical,
+              itemCount: state.posts.length + 1,
+              controller: _scrollController,
+            ),
           );
         }
       },
