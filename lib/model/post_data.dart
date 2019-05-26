@@ -33,18 +33,50 @@ class PostInfo {
   final String id;
   final String url;
   final bool isVideo;
+  final double height;
+  final double width;
 
   PostInfo(
-      {this.title, this.isMeta, this.over18, this.id, this.url, this.isVideo});
+      {this.title,
+      this.isMeta,
+      this.over18,
+      this.id,
+      this.url,
+      this.isVideo,
+      this.height,
+      this.width});
 
   factory PostInfo.fromJson(Map<String, dynamic> json) {
     var dataMap = json['data'] as Map<String, dynamic>;
+    var url = dataMap['url'] as String;
+    var isVideo = dataMap['is_video'] as bool;
+    var height = 0.0;
+    var width = 0.0;
+    final RegExp imgurJpgRegex = new RegExp(r"imgur.com/\w+$");
+    if (isVideo) {
+      var mediaMap = dataMap['media'] as Map<String, dynamic>;
+      var redditVideo = mediaMap['reddit_video'] as Map<String, dynamic>;
+      var dashUrl = redditVideo['dash_url'] as String;
+      if (dashUrl != null) {
+        url = dashUrl;
+        height = double.parse(redditVideo['height'].toString());
+        width = double.parse(redditVideo['width'].toString());
+      }
+    } else if (url.endsWith(".gifv")) {
+      height = double.parse(dataMap['thumbnail_height'].toString());
+      width = double.parse(dataMap['thumbnail_width'].toString());
+      isVideo = true;
+    } else if (imgurJpgRegex.hasMatch(url)) {
+      url = url + ".jpg";
+    }
     return new PostInfo(
         title: dataMap['title'] as String,
         isMeta: dataMap['is_meta'] as bool,
         over18: dataMap['over_18'] as bool,
         id: dataMap['id'] as String,
-        url: dataMap['url'] as String,
-        isVideo: dataMap['is_video'] as bool);
+        url: url,
+        isVideo: isVideo,
+        height: height,
+        width: width);
   }
 }

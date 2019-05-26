@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:looper_tv/post_bloc.dart';
+import 'package:video_player/video_player.dart';
 
 import 'bloc/post.dart';
 import 'bloc/post_event.dart';
 import 'bloc/post_state.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:chewie/chewie.dart';
 
 void main() {
   runApp(new MyApp());
@@ -65,8 +67,8 @@ class _HomePageState extends State<HomePage> {
         }
         if (state is PostLoaded) {
           return Padding(
-            padding: const EdgeInsets.fromLTRB(8.0, 2.0, 8.0, 2.0),
-            child: PageView.builder(
+            padding: const EdgeInsets.all(8.0),
+            child: ListView.builder(
               itemBuilder: (BuildContext context, int index) {
                 return index >= state.posts.length
                     ? BottomLoader()
@@ -120,15 +122,32 @@ class PostWidget extends StatelessWidget {
 
 Widget getPostDetails(Post post) {
   if (post.isVideo) {
-    return ListTile(
-      title: Text(post.title),
-      subtitle: Text(post.isVideo.toString() + "-" + post.url),
-    );
+    return ListTile(title: Text(post.title), subtitle: VideoPost(post));
   } else {
     return ListTile(
       title: Text(post.title),
       subtitle: FadeInImage.memoryNetwork(
           placeholder: kTransparentImage, image: post.url),
+    );
+  }
+}
+
+class VideoPost extends StatelessWidget {
+  final ChewieController chewieController;
+  final Post post;
+
+  VideoPost(this.post)
+      : chewieController = ChewieController(
+            videoPlayerController: VideoPlayerController.network(post.url),
+            autoPlay: true,
+            aspectRatio: post.width / post.height,
+            looping: true);
+
+  @override
+  Widget build(BuildContext context) {
+    print(post.url);
+    return Chewie(
+      controller: chewieController,
     );
   }
 }
