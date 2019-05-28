@@ -121,9 +121,12 @@ class PostWidget extends StatelessWidget {
 
 Widget getPostDetails(Post post) {
   return ListTile(
-      title: Text(
-        post.title,
-        style: TextStyle(fontSize: 20.0),
+      title: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(
+          post.title,
+          style: TextStyle(fontSize: 20.0, fontFamily: 'Rajdhani'),
+        ),
       ),
       subtitle: post.isVideo
           ? VideoPost(post)

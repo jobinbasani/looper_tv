@@ -23,7 +23,10 @@ dev_dependencies:
 
 
 flutter:
-
+  fonts:
+    - family: Rajdhani
+      fonts:
+        - asset: assets/Rajdhani-Regular.ttf
   uses-material-design: true
 
 
