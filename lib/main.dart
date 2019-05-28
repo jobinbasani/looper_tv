@@ -40,8 +40,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final _scrollController =
-      new PageController(keepPage: false, viewportFraction: 0.85);
+  final _scrollController = new ScrollController();
   final PostBloc _postBloc = PostBloc(httpClient: http.Client());
   final _scrollThreshold = 200.0;
 
@@ -121,15 +120,15 @@ class PostWidget extends StatelessWidget {
 }
 
 Widget getPostDetails(Post post) {
-  if (post.isVideo) {
-    return ListTile(title: Text(post.title), subtitle: VideoPost(post));
-  } else {
-    return ListTile(
-      title: Text(post.title),
-      subtitle: FadeInImage.memoryNetwork(
-          placeholder: kTransparentImage, image: post.url),
-    );
-  }
+  return ListTile(
+      title: Text(
+        post.title,
+        style: TextStyle(fontSize: 20.0),
+      ),
+      subtitle: post.isVideo
+          ? VideoPost(post)
+          : FadeInImage.memoryNetwork(
+              placeholder: kTransparentImage, image: post.url));
 }
 
 class VideoPost extends StatelessWidget {
