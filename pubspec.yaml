@@ -24,9 +24,9 @@ dev_dependencies:
 
 flutter:
   fonts:
-    - family: 'Libre Baskerville'
+    - family: 'Bitter'
       fonts:
-        - asset: assets/LibreBaskerville-Regular.ttf
+        - asset: assets/Bitter-Regular.ttf
   uses-material-design: true
 
 
