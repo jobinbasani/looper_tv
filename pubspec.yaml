@@ -24,9 +24,9 @@ dev_dependencies:
 
 flutter:
   fonts:
-    - family: Rajdhani
+    - family: 'Libre Baskerville'
       fonts:
-        - asset: assets/Rajdhani-Regular.ttf
+        - asset: assets/LibreBaskerville-Regular.ttf
   uses-material-design: true
 
 

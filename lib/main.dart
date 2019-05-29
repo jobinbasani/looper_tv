@@ -125,7 +125,7 @@ Widget getPostDetails(Post post) {
         padding: const EdgeInsets.all(8.0),
         child: Text(
           post.title,
-          style: TextStyle(fontSize: 20.0, fontFamily: 'Rajdhani'),
+          style: TextStyle(fontSize: 20.0, fontFamily: 'Libre Baskerville'),
         ),
       ),
       subtitle: post.isVideo
