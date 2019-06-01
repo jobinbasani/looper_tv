@@ -121,36 +121,60 @@ class PostWidget extends StatelessWidget {
 
 Widget getPostDetails(Post post) {
   return ListTile(
-      title: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text(
-          post.title,
-          style: TextStyle(fontSize: 20.0, fontFamily: 'Bitter'),
+      title: Container(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            post.title,
+            style: TextStyle(
+                fontSize: 20.0, fontFamily: 'Bitter', color: Colors.white),
+          ),
         ),
+        color: Colors.red,
       ),
       subtitle: post.isVideo
-          ? VideoPost(post)
+          ? VideoEntry(post: post)
           : FadeInImage.memoryNetwork(
               placeholder: kTransparentImage, image: post.url));
 }
 
-class VideoPost extends StatelessWidget {
-  final ChewieController chewieController;
+class VideoEntry extends StatefulWidget {
   final Post post;
 
-  VideoPost(this.post)
-      : chewieController = ChewieController(
-            videoPlayerController: VideoPlayerController.network(post.url),
-            autoPlay: true,
-            aspectRatio: post.width / post.height,
-            looping: true);
+  const VideoEntry({Key key, this.post}) : super(key: key);
+
+  @override
+  _VideoEntryState createState() => _VideoEntryState();
+}
+
+class _VideoEntryState extends State<VideoEntry> {
+  ChewieController _chewieController;
+  VideoPlayerController _videoPlayerController;
+
+  @override
+  void initState() {
+    super.initState();
+    _videoPlayerController = VideoPlayerController.network(widget.post.url);
+    _chewieController = ChewieController(
+        videoPlayerController: _videoPlayerController,
+        autoPlay: true,
+        aspectRatio: widget.post.width / widget.post.height,
+        looping: true,
+        autoInitialize: true);
+  }
 
   @override
   Widget build(BuildContext context) {
-    print(post.url);
     return Chewie(
-      controller: chewieController,
+      controller: _chewieController,
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _videoPlayerController.dispose();
+    _chewieController.dispose();
   }
 }
 
