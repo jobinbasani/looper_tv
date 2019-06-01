@@ -9,6 +9,7 @@ import 'bloc/post_event.dart';
 import 'bloc/post_state.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:chewie/chewie.dart';
+import 'package:random_color/random_color.dart';
 
 void main() {
   runApp(new MyApp());
@@ -130,7 +131,7 @@ Widget getPostDetails(Post post) {
                 fontSize: 20.0, fontFamily: 'Bitter', color: Colors.white),
           ),
         ),
-        color: Colors.red,
+        color: RandomColor().randomColor(colorBrightness: ColorBrightness.dark),
       ),
       subtitle: post.isVideo
           ? VideoEntry(post: post)

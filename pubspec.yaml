@@ -16,6 +16,8 @@ dependencies:
   cupertino_icons: ^0.1.2
   transparent_image: ^1.0.0
   chewie: ^0.9.7
+  random_color: ^1.0.3
+
 
 dev_dependencies:
   flutter_test:
