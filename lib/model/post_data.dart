@@ -67,6 +67,7 @@ class PostInfo {
       height = double.parse(dataMap['thumbnail_height'].toString());
       width = double.parse(dataMap['thumbnail_width'].toString());
       isVideo = true;
+      url = url.replaceAll(".gifv", ".mp4");
     } else if (imgurJpgRegex.hasMatch(url)) {
       url = url + ".jpg";
     } else if (gfycatGifRegex.hasMatch(url)) {

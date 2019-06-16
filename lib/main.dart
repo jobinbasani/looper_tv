@@ -121,6 +121,7 @@ class PostWidget extends StatelessWidget {
 }
 
 Widget getPostDetails(Post post) {
+  debugPrint("Url is "+post.url);
   return ListTile(
       title: Container(
         child: Padding(
@@ -155,6 +156,7 @@ class _VideoEntryState extends State<VideoEntry> {
   @override
   void initState() {
     super.initState();
+
     _videoPlayerController = VideoPlayerController.network(widget.post.url);
     _chewieController = ChewieController(
         videoPlayerController: _videoPlayerController,
