@@ -121,7 +121,7 @@ class PostWidget extends StatelessWidget {
 }
 
 Widget getPostDetails(Post post) {
-  debugPrint("Url is "+post.url);
+  debugPrint("Url is " + post.url);
   return ListTile(
       title: Container(
         child: Padding(

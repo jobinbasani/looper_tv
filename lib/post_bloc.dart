@@ -6,6 +6,7 @@ import 'package:looper_tv/bloc/bloc.dart';
 import 'package:looper_tv/bloc/post.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
+import 'package:rxdart/rxdart.dart';
 
 import 'model/post_data.dart';
 
@@ -30,6 +31,12 @@ class PostBloc extends Bloc<PostEvent, PostState> {
         yield PostError();
       }
     }
+  }
+
+  @override
+  Stream<PostEvent> transform(Stream<PostEvent> events) {
+    return super.transform((events as Observable<PostEvent>)
+        .debounce(Duration(milliseconds: 700)));
   }
 
   Future<List<Post>> _fetchPosts() async {

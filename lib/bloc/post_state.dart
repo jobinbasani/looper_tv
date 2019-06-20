@@ -27,6 +27,6 @@ class PostLoaded extends PostState{
   PostLoaded({this.posts}):super([posts]);
 
   @override
-  String toString() => 'PostError';
+  String toString() => 'PostLoaded';
 
 }
