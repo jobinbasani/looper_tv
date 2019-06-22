@@ -22,10 +22,18 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   Stream<PostState> mapEventToState(PostEvent event) async* {
     if (event is Fetch) {
       try {
-        if (currentState is PostUninitialized || currentState is PostLoaded) {
+        if (currentState is PostUninitialized) {
           final posts = await _fetchPosts();
-          yield PostLoaded(posts: posts);
+          yield PostLoaded(posts: posts, hasReachedMax: false);
           return;
+        } else if (currentState is PostLoaded) {
+          final posts = await _fetchPosts();
+          yield posts.isEmpty
+              ? (currentState as PostLoaded).copyWith(hasReachedMax: true)
+              : PostLoaded(
+                  posts: (currentState as PostLoaded).posts + posts,
+                  hasReachedMax: false,
+                );
         }
       } catch (_) {
         yield PostError();
@@ -40,8 +48,8 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   }
 
   Future<List<Post>> _fetchPosts() async {
-    final response =
-        await httpClient.get('https://www.reddit.com/r/funny/top.json');
+    final response = await httpClient
+        .get('https://www.reddit.com/r/bettereveryloop/top.json');
     print(response);
     if (response.statusCode == 200) {
       JsonResponse jsonResponse =
