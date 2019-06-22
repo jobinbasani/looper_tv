@@ -48,12 +48,15 @@ class PostInfo {
 
   factory PostInfo.fromJson(Map<String, dynamic> json) {
     var dataMap = json['data'] as Map<String, dynamic>;
+    var crosspostList = (dataMap['crosspost_parent_list'] as List);
+    if (crosspostList != null && crosspostList.isNotEmpty) {
+      dataMap = crosspostList.first as Map<String, dynamic>;
+    }
     var url = dataMap['url'] as String;
     var isVideo = dataMap['is_video'] as bool;
     var height = 0.0;
     var width = 0.0;
     final RegExp imgurJpgRegex = new RegExp(r"imgur.com/\w+$");
-    final RegExp gfycatGifRegex = new RegExp(r"https://gfycat.com/\w+$");
     if (isVideo) {
       var mediaMap = dataMap['media'] as Map<String, dynamic>;
       var redditVideo = mediaMap['reddit_video'] as Map<String, dynamic>;
@@ -70,8 +73,6 @@ class PostInfo {
       url = url.replaceAll(".gifv", ".mp4");
     } else if (imgurJpgRegex.hasMatch(url)) {
       url = url + ".jpg";
-    } else if (gfycatGifRegex.hasMatch(url)) {
-      url = url.replaceAll("gfycat", "thumbs.gfycat") + "-small.gif";
     }
     return new PostInfo(
         title: dataMap['title'] as String,

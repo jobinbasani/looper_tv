@@ -63,9 +63,18 @@ class PostBloc extends Bloc<PostEvent, PostState> {
               isVideo: postInfo.isVideo,
               height: postInfo.height,
               width: postInfo.width))
+          .where((post) => _isUrlDisplayable(post))
           .toList();
     } else {
       throw Exception('error fetching posts');
     }
+  }
+
+  bool _isUrlDisplayable(Post post) {
+    var uri = Uri.parse(post.url);
+    if (uri.host == 'gfycat.com') {
+      return false;
+    }
+    return true;
   }
 }
