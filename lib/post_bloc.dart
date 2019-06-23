@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:collection';
 
 import 'package:bloc/bloc.dart';
 import 'package:looper_tv/bloc/bloc.dart';
@@ -12,6 +13,14 @@ import 'model/post_data.dart';
 
 class PostBloc extends Bloc<PostEvent, PostState> {
   final http.Client httpClient;
+  Queue<String> topicQueue = new Queue();
+  List<String> topicList = [
+    'BetterEveryLoop',
+    'blackmagicfuckery',
+    'Damnthatsinteresting',
+    'interestingasfuck',
+    'oddlysatisfying'
+  ];
 
   PostBloc({@required this.httpClient});
 
@@ -48,8 +57,14 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   }
 
   Future<List<Post>> _fetchPosts() async {
+    if (topicQueue.isEmpty) {
+      topicList.shuffle();
+      topicQueue.addAll(topicList);
+    }
+    String topic = topicQueue.removeFirst();
+    topicQueue.addLast(topic);
     final response = await httpClient
-        .get('https://www.reddit.com/r/bettereveryloop/top.json');
+        .get("https://www.reddit.com/r/$topic/hot.json?count=50");
     print(response);
     if (response.statusCode == 200) {
       JsonResponse jsonResponse =
