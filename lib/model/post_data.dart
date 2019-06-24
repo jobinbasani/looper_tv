@@ -29,6 +29,7 @@ class Data {
 class PostInfo {
   final String title;
   final bool isMeta;
+  final bool textOnly;
   final bool over18;
   final String id;
   final String url;
@@ -38,6 +39,7 @@ class PostInfo {
 
   PostInfo(
       {this.title,
+        this.textOnly,
       this.isMeta,
       this.over18,
       this.id,
@@ -54,6 +56,7 @@ class PostInfo {
     }
     var url = dataMap['url'] as String;
     var isVideo = dataMap['is_video'] as bool;
+    var selfText = dataMap['selftext'] as String;
     var height = 0.0;
     var width = 0.0;
     final RegExp imgurJpgRegex = new RegExp(r"imgur.com/\w+$");
@@ -78,6 +81,7 @@ class PostInfo {
         title: dataMap['title'] as String,
         isMeta: dataMap['is_meta'] as bool,
         over18: dataMap['over_18'] as bool,
+        textOnly: selfText.isNotEmpty,
         id: dataMap['id'] as String,
         url: url,
         isVideo: isVideo,

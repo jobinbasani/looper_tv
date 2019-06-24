@@ -71,6 +71,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
           JsonResponse.fromJson(json.decode(response.body));
       print(jsonResponse.kind);
       return jsonResponse.data.children
+          .where((postInfo) => _isUrlDisplayable(postInfo))
           .map((postInfo) => Post(
               id: postInfo.id,
               title: postInfo.title,
@@ -78,15 +79,17 @@ class PostBloc extends Bloc<PostEvent, PostState> {
               isVideo: postInfo.isVideo,
               height: postInfo.height,
               width: postInfo.width))
-          .where((post) => _isUrlDisplayable(post))
           .toList();
     } else {
       throw Exception('error fetching posts');
     }
   }
 
-  bool _isUrlDisplayable(Post post) {
-    var uri = Uri.parse(post.url);
+  bool _isUrlDisplayable(PostInfo postInfo) {
+    if (postInfo.textOnly) {
+      return false;
+    }
+    var uri = Uri.parse(postInfo.url);
     if (uri.host == 'gfycat.com') {
       return false;
     }
