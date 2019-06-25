@@ -13,14 +13,16 @@ import 'model/post_data.dart';
 
 class PostBloc extends Bloc<PostEvent, PostState> {
   final http.Client httpClient;
-  Queue<String> topicQueue = new Queue();
-  List<String> topicList = [
-    'BetterEveryLoop',
-    'blackmagicfuckery',
-    'Damnthatsinteresting',
-    'interestingasfuck',
-    'oddlysatisfying'
+  static int count = 25;
+  static String sortType = 'hot';
+  List<TopicManager> topicManagerList = [
+    TopicManager('BetterEveryLoop', count, sortType),
+    TopicManager('blackmagicfuckery', count, sortType),
+    TopicManager('Damnthatsinteresting', count, sortType),
+    TopicManager('interestingasfuck', count, sortType),
+    TopicManager('oddlysatisfying', count, sortType)
   ];
+  Queue<TopicManager> topicManagerQueue = new Queue();
 
   PostBloc({@required this.httpClient});
 
@@ -57,19 +59,20 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   }
 
   Future<List<Post>> _fetchPosts() async {
-    if (topicQueue.isEmpty) {
-      topicList.shuffle();
-      topicQueue.addAll(topicList);
+    if (topicManagerQueue.isEmpty) {
+      topicManagerList.shuffle();
+      topicManagerQueue.addAll(topicManagerList);
     }
-    String topic = topicQueue.removeFirst();
-    topicQueue.addLast(topic);
-    final response = await httpClient
-        .get("https://www.reddit.com/r/$topic/hot.json?count=50");
+    TopicManager topicManager = topicManagerQueue.removeFirst();
+    topicManagerQueue.addLast(topicManager);
+    String url = "https://www.reddit.com/r/${topicManager.getTopicUrl()}";
+    final response = await httpClient.get(url);
     print(response);
     if (response.statusCode == 200) {
       JsonResponse jsonResponse =
           JsonResponse.fromJson(json.decode(response.body));
       print(jsonResponse.kind);
+      topicManager.after = jsonResponse.data.after;
       return jsonResponse.data.children
           .where((postInfo) => _isUrlDisplayable(postInfo))
           .map((postInfo) => Post(
@@ -86,7 +89,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   }
 
   bool _isUrlDisplayable(PostInfo postInfo) {
-    if (postInfo.textOnly) {
+    if (postInfo.textOnly || postInfo.over18 || postInfo.isMeta) {
       return false;
     }
     var uri = Uri.parse(postInfo.url);
@@ -94,5 +97,22 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       return false;
     }
     return true;
+  }
+}
+
+class TopicManager {
+  final String topic;
+  final int count;
+  final String sortType;
+  String after;
+
+  TopicManager(this.topic, this.count, this.sortType);
+
+  String getTopicUrl() {
+    String url = "$topic/$sortType.json?count=$count";
+    if (after != null && after.isNotEmpty) {
+      url = "$url&after=$after";
+    }
+    return url;
   }
 }

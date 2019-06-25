@@ -13,13 +13,15 @@ class Data {
   final String modhash;
   final int dist;
   final List<PostInfo> children;
+  final String after;
 
-  Data({this.modhash, this.dist, this.children});
+  Data({this.modhash, this.dist, this.children, this.after});
 
   factory Data.fromJson(Map<String, dynamic> json) {
     return new Data(
         modhash: json['modhash'] as String,
         dist: json['dist'] as int,
+        after: json['after'] as String,
         children: (json['children'] as List)
             .map((i) => PostInfo.fromJson(i))
             .toList());
@@ -39,7 +41,7 @@ class PostInfo {
 
   PostInfo(
       {this.title,
-        this.textOnly,
+      this.textOnly,
       this.isMeta,
       this.over18,
       this.id,
