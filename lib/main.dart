@@ -115,6 +115,7 @@ class PostWidget extends StatelessWidget {
 Widget getPostDetails(Post post) {
   debugPrint("Url is " + post.url);
   return ListTile(
+      contentPadding: EdgeInsets.all(0.0),
       title: Container(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
