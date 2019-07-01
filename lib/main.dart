@@ -106,16 +106,8 @@ class PostWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Flex(
-      children: <Widget>[
-        Card(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[getPostDetails(post)],
-          ),
-        ),
-      ],
-      direction: Axis.vertical,
+    return Card(
+      child: getPostDetails(post),
     );
   }
 }
