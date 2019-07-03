@@ -10,8 +10,10 @@ import 'bloc/post_state.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:chewie/chewie.dart';
 import 'package:random_color/random_color.dart';
+import 'package:screen/screen.dart';
 
 void main() {
+  Screen.keepOn(true);
   runApp(new MyApp());
 }
 
