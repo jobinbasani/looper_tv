@@ -111,15 +111,13 @@ class PostWidget extends StatelessWidget {
 }
 
 Widget getCard(Post post) {
-  Color postColor =
-      RandomColor().randomColor(colorBrightness: ColorBrightness.dark);
   return Card(
-    child: getPostDetails(post, postColor),
-    color: postColor,
+    child: getPostDetails(post),
+    color: RandomColor().randomColor(colorBrightness: ColorBrightness.dark),
   );
 }
 
-Widget getPostDetails(Post post, Color postColor) {
+Widget getPostDetails(Post post) {
   debugPrint("Url is " + post.url);
   return ListTile(
       contentPadding: EdgeInsets.all(0.0),
@@ -132,7 +130,6 @@ Widget getPostDetails(Post post, Color postColor) {
                 fontSize: 20.0, fontFamily: 'Bitter', color: Colors.white),
           ),
         ),
-        color: postColor,
       ),
       subtitle: post.isVideo
           ? VideoEntry(post: post)
