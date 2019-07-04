@@ -114,9 +114,30 @@ class PostWidget extends StatelessWidget {
 
 Widget getCard(Post post) {
   return Card(
-    child: getPostDetails(post),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        getPostDetails(post),
+        ButtonTheme.bar(
+          child: ButtonBar(
+            children: <Widget>[
+              FlatButton(
+                  onPressed: (){sharePost(post);},
+                  child: const Text(
+                    'SHARE',
+                    style: TextStyle(color: Colors.white),
+                  ))
+            ],
+          ),
+        )
+      ],
+    ),
     color: RandomColor().randomColor(colorBrightness: ColorBrightness.dark),
   );
+}
+
+void sharePost(Post post){
+debugPrint(post.url);
 }
 
 Widget getPostDetails(Post post) {
@@ -125,7 +146,7 @@ Widget getPostDetails(Post post) {
       contentPadding: EdgeInsets.all(0.0),
       title: Container(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(10.0),
           child: Text(
             post.title,
             style: TextStyle(
