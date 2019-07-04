@@ -1,3 +1,8 @@
+import 'dart:async';
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,6 +16,7 @@ import 'package:transparent_image/transparent_image.dart';
 import 'package:chewie/chewie.dart';
 import 'package:random_color/random_color.dart';
 import 'package:screen/screen.dart';
+import 'package:esys_flutter_share/esys_flutter_share.dart';
 
 void main() {
   Screen.keepOn(true);
@@ -122,7 +128,9 @@ Widget getCard(Post post) {
           child: ButtonBar(
             children: <Widget>[
               FlatButton(
-                  onPressed: (){sharePost(post);},
+                  onPressed: () {
+                    sharePost(post);
+                  },
                   child: const Text(
                     'SHARE',
                     style: TextStyle(color: Colors.white),
@@ -136,8 +144,16 @@ Widget getCard(Post post) {
   );
 }
 
-void sharePost(Post post){
-debugPrint(post.url);
+Future sharePost(Post post) async {
+  debugPrint(post.url);
+  if (post.isVideo) {
+    debugPrint("skipping video share");
+  } else {
+    var request = await HttpClient().getUrl(Uri.parse(post.url));
+    var response = await request.close();
+    Uint8List bytes = await consolidateHttpClientResponseBytes(response);
+    await Share.file('Share', 'looper_tv.jpg', bytes, 'image/jpg');
+  }
 }
 
 Widget getPostDetails(Post post) {

@@ -18,6 +18,7 @@ dependencies:
   chewie: ^0.9.7
   random_color: ^1.0.3
   screen: ^0.0.5
+  esys_flutter_share: ^1.0.2
 
 
 dev_dependencies:
