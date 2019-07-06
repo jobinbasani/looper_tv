@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
     return new MaterialApp(
         title: 'Looper TV',
         theme: new ThemeData(
-          primarySwatch: Colors.red,
+          primarySwatch: Colors.teal,
         ),
         home: Scaffold(
           appBar: AppBar(
