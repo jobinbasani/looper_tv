@@ -15,13 +15,14 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   final http.Client httpClient;
   static int count = 25;
   static String sortType = 'hot';
-  List<TopicManager> topicManagerList = [
-    TopicManager('BetterEveryLoop', count, sortType),
-    TopicManager('blackmagicfuckery', count, sortType),
-    TopicManager('Damnthatsinteresting', count, sortType),
-    TopicManager('interestingasfuck', count, sortType),
-    TopicManager('oddlysatisfying', count, sortType)
+  List<String> topics = [
+    'BetterEveryLoop',
+    'blackmagicfuckery',
+    'Damnthatsinteresting',
+    'interestingasfuck',
+    'oddlysatisfying'
   ];
+
   Queue<TopicManager> topicManagerQueue = new Queue();
 
   PostBloc({@required this.httpClient});
@@ -60,8 +61,12 @@ class PostBloc extends Bloc<PostEvent, PostState> {
 
   Future<List<Post>> _fetchPosts() async {
     if (topicManagerQueue.isEmpty) {
-      topicManagerList.shuffle();
-      topicManagerQueue.addAll(topicManagerList);
+      topics.shuffle();
+      for (var i = 0; i < topics.length; i += 2) {
+        var end = i + 2 > topics.length ? topics.length : i + 2;
+        topicManagerQueue.add(
+            TopicManager(topics.sublist(i, end).join('+'), count, sortType));
+      }
     }
     TopicManager topicManager = topicManagerQueue.removeFirst();
     topicManagerQueue.addLast(topicManager);
