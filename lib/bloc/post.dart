@@ -11,6 +11,13 @@ class Post extends Equatable {
   Post({this.id, this.title, this.url, this.isVideo, this.height, this.width})
       : super([id, title, url, isVideo, height, width]);
 
+  String getMimeType() => isVideo
+      ? "video/mpd+mp4"
+      : url.endsWith(".gif") ? "image/gif" : "image/jpg";
+
+  String getFileType() =>
+      isVideo ? ".mpd" : url.endsWith(".gif") ? ".gif" : "jpg";
+
   @override
-  String toString() => 'Post { id: $id}';
+  String toString() => 'Post { Url: $url}';
 }

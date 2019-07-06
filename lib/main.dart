@@ -155,7 +155,8 @@ Future sharePost(Post post) async {
     var request = await HttpClient().getUrl(Uri.parse(post.url));
     var response = await request.close();
     Uint8List bytes = await consolidateHttpClientResponseBytes(response);
-    await Share.file('Share', 'looper_tv.jpg', bytes, 'image/jpg',
+    await Share.file(
+        'Share', 'looper_tv${post.getFileType()}', bytes, post.getMimeType(),
         text: post.title);
   }
 }
