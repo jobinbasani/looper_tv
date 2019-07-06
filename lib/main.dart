@@ -125,17 +125,20 @@ Widget getCard(Post post) {
       children: <Widget>[
         getPostDetails(post),
         ButtonTheme.bar(
-          child: ButtonBar(
-            children: <Widget>[
-              FlatButton(
-                  onPressed: () {
-                    sharePost(post);
-                  },
-                  child: const Text(
-                    'SHARE',
-                    style: TextStyle(color: Colors.white),
-                  ))
-            ],
+          child: Visibility(
+            child: ButtonBar(
+              children: <Widget>[
+                FlatButton(
+                    onPressed: () {
+                      sharePost(post);
+                    },
+                    child: const Text(
+                      'SHARE',
+                      style: TextStyle(color: Colors.white),
+                    ))
+              ],
+            ),
+            visible: !post.isVideo,
           ),
         )
       ],
