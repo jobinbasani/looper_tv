@@ -17,6 +17,7 @@ import 'package:chewie/chewie.dart';
 import 'package:random_color/random_color.dart';
 import 'package:screen/screen.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 void main() {
   Screen.keepOn(true);
@@ -65,7 +66,7 @@ class _HomePageState extends State<HomePage> {
       builder: (BuildContext context, PostState state) {
         if (state is PostUninitialized) {
           return Center(
-            child: CircularProgressIndicator(),
+            child: SpinKitRipple(color: Colors.teal),
           );
         }
         if (state is PostError) {
@@ -227,15 +228,7 @@ class BottomLoader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      child: Center(
-        child: SizedBox(
-          width: 33,
-          height: 33,
-          child: CircularProgressIndicator(
-            strokeWidth: 1.5,
-          ),
-        ),
-      ),
+      child: Center(child: SpinKitRipple(color: Colors.teal)),
     );
   }
 }
