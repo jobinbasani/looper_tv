@@ -16,7 +16,7 @@ class Post extends Equatable implements Comparable {
       : url.endsWith(".gif") ? "image/gif" : "image/jpg";
 
   String getFileType() =>
-      isVideo ? ".mpd" : url.endsWith(".gif") ? ".gif" : "jpg";
+      isVideo ? ".mpd" : url.endsWith(".gif") ? ".gif" : ".jpg";
 
   @override
   String toString() => 'Post { Url: $url}';
