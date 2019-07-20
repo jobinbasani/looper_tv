@@ -80,7 +80,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
           JsonResponse.fromJson(json.decode(response.body));
       print(jsonResponse.kind);
       topicManager.after = jsonResponse.data.after;
-      return jsonResponse.data.children
+      Set<Post> uniquePosts = jsonResponse.data.children
           .where((postInfo) => _isUrlDisplayable(postInfo))
           .map((postInfo) => Post(
               id: postInfo.id,
@@ -89,14 +89,20 @@ class PostBloc extends Bloc<PostEvent, PostState> {
               isVideo: postInfo.isVideo,
               height: postInfo.height,
               width: postInfo.width))
-          .toList();
+          .toSet();
+      List<Post> posts = uniquePosts.toList();
+      posts.shuffle();
+      return posts;
     } else {
       throw Exception('error fetching posts');
     }
   }
 
   bool _isUrlDisplayable(PostInfo postInfo) {
-    if (postInfo.textOnly || postInfo.over18 || postInfo.isMeta || postInfo.title.toLowerCase().contains("reddit")) {
+    if (postInfo.textOnly ||
+        postInfo.over18 ||
+        postInfo.isMeta ||
+        postInfo.title.toLowerCase().contains("reddit")) {
       return false;
     }
     var uri = Uri.parse(postInfo.url);

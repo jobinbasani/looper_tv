@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-class Post extends Equatable {
+class Post extends Equatable implements Comparable {
   final String id;
   final String title;
   final String url;
@@ -20,4 +20,9 @@ class Post extends Equatable {
 
   @override
   String toString() => 'Post { Url: $url}';
+
+  @override
+  int compareTo(other) {
+    return this.id.compareTo((other as Post).id);
+  }
 }
