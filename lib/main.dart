@@ -95,7 +95,7 @@ class IntroState extends State<IntroScreen> {
     "Things that are amazing, interesting, and incredible!",
     "Clips that get better the longer you watch them!",
     "Pics that offer a very interesting perspective!",
-    "Continous feed of interesting pics and videos",
+    "A continuous feed of interesting pics and videos!",
     "All set! Let's go!"
   ];
 
