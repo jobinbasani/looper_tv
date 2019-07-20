@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:looper_tv/post_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 
 import 'bloc/post.dart';
@@ -32,29 +33,154 @@ class MyApp extends StatelessWidget {
         theme: new ThemeData(
           primarySwatch: Colors.teal,
         ),
-        home: Scaffold(
-          appBar: AppBar(
-            title: Text('Looper TV'),
-          ),
-          body: HomePage(),
-        ));
+        home: HomePage());
   }
 }
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key, this.title}) : super(key: key);
+  @override
+  State<StatefulWidget> createState() => new HomePageState();
+}
+
+class HomePageState extends State<HomePage> {
+  Future checkFirstSeen() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool _seen = (prefs.getBool('seen') ?? false);
+
+    if (_seen) {
+      Navigator.of(context).pushReplacement(new MaterialPageRoute(
+          builder: (context) => Scaffold(
+                appBar: AppBar(
+                  title: Text('Looper TV'),
+                ),
+                body: PostList(),
+              )));
+    } else {
+      prefs.setBool('seen', true);
+      Navigator.of(context).pushReplacement(new MaterialPageRoute(
+          builder: (context) => Scaffold(
+                body: IntroScreen(),
+              )));
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    new Timer(new Duration(milliseconds: 200), () {
+      checkFirstSeen();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      body: new Center(
+        child: new Text('Loading...'),
+      ),
+    );
+  }
+}
+
+class IntroScreen extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => IntroState();
+}
+
+class IntroState extends State<IntroScreen> {
+  Color _bgColor;
+  String _textMessage;
+  String _buttonMessage;
+  List<String> _textMessages = [
+    "Things that are amazing, interesting, and incredible!",
+    "Clips that get better the longer you watch them!",
+    "Pics that offer a very interesting perspective!",
+    "Continous feed of interesting pics and videos",
+    "All set! Let's go!"
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _bgColor =
+        RandomColor().randomColor(colorBrightness: ColorBrightness.veryDark);
+    _textMessage = _textMessages.removeAt(0);
+    _buttonMessage = "Next";
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: _bgColor,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Center(
+            child: Container(
+              child: Text(
+                _textMessage,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'Amatic SC',
+                  fontSize: 25.0,
+                ),
+              ),
+              margin: const EdgeInsets.only(left: 10.0, right: 10.0),
+            ),
+          ),
+          Center(
+            child: Container(
+              child: RaisedButton(
+                onPressed: () {
+                  if (_textMessages.isNotEmpty) {
+                    setState(() {
+                      _bgColor = RandomColor().randomColor(
+                          colorBrightness: ColorBrightness.veryDark);
+                      _textMessage = _textMessages.removeAt(0);
+                      if (_textMessages.isEmpty) {
+                        _buttonMessage = "Done";
+                      }
+                    });
+                  } else {
+                    Navigator.of(context).pushReplacement(new MaterialPageRoute(
+                        builder: (context) => Scaffold(
+                              appBar: AppBar(
+                                title: Text('Looper TV'),
+                              ),
+                              body: PostList(),
+                            )));
+                  }
+                },
+                child: Text(
+                  _buttonMessage,
+                  style: TextStyle(color: _bgColor),
+                ),
+              ),
+              margin: const EdgeInsets.only(top: 15.0),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class PostList extends StatefulWidget {
+  PostList({Key key, this.title}) : super(key: key);
   final String title;
 
   @override
-  _HomePageState createState() => new _HomePageState();
+  _PostListState createState() => new _PostListState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _PostListState extends State<PostList> {
   final _scrollController = new ScrollController();
   final PostBloc _postBloc = PostBloc(httpClient: http.Client());
   final _scrollThreshold = 200.0;
 
-  _HomePageState() {
+  _PostListState() {
     _scrollController.addListener(_onScroll);
     _postBloc.dispatch(Fetch());
   }

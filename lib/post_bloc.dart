@@ -20,7 +20,9 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     'blackmagicfuckery',
     'Damnthatsinteresting',
     'interestingasfuck',
-    'oddlysatisfying'
+    'oddlysatisfying',
+    'BeAmazed',
+    'nextfuckinglevel'
   ];
 
   Queue<TopicManager> topicManagerQueue = new Queue();
@@ -94,7 +96,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   }
 
   bool _isUrlDisplayable(PostInfo postInfo) {
-    if (postInfo.textOnly || postInfo.over18 || postInfo.isMeta) {
+    if (postInfo.textOnly || postInfo.over18 || postInfo.isMeta || postInfo.title.toLowerCase().contains("reddit")) {
       return false;
     }
     var uri = Uri.parse(postInfo.url);
